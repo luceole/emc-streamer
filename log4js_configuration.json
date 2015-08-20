@@ -1,0 +1,14 @@
+{
+  "appenders": [
+    {
+      "type": "file",
+      "filename": "emcstream.log",
+      "maxLogSize": 204800,
+      "backups": 3,
+      "category":"log4js"
+    }
+  ],
+  "levels": {
+    "log4js": "ALL"
+  }
+}
