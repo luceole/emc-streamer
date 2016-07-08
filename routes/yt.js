@@ -68,18 +68,30 @@ vstream.childrequest(format.url,res,fmt);
 
 }
 exports.download = function(req, res){  // TODO
-var url='http://www.youtube.be/watch?v='+req.params.idVideo;
-var readStream=ytdl(url, { filter: function(format) { return format.container === 'webm'; }})
-//var readStream=ytdl(url, { filter: function(format) { return format.container === 'webm'; }, proxy: "http://localhost:3128" })  // Mode proxy ON
-readStream.on('error', function(err) {
-console.log("Stream YouTube :"+req.params.idVideo+" "+err.message);
-  res.send("Not Found",404);
+ytdl.getInfo('http://www.youtube.be/watch?v='+req.params.idVideo , function (err,infos)
+{
+if (err) {
+console.log("getUrl "+req.params.idVideo+" "+err.message);
+res.send("Not Found",404);
+return;
+}
+// Copie Locale OK
+//ytdl.downloadFromInfo(infos, { filter: function(format) { return format.container === 'mp4'; } })
+//.pipe(fs.createWriteStream('video.mp4'));
+var fmt = (req.params.format=="webm")?req.params.format:"webm";
+//console.log(fmt);
+var format = infos.formats.filter(function(format) {
+return format.container === fmt;
+})[0];
+//res.setHeader('Content-disposition', 'attachment');
+vstream.download(format.url,res,fmt);
 });
-readStream.on('end', function () {
- console.log("Stream YouTube :"+req.params.idVideo+" End");
-});
-readStream.pipe('todo');
+
 };
+
+
+
+
 exports.getoembed = function(req, res){
 console.log("getOembed :"+req.params.idVideo);
 var url="http://www.youtube.com/oembed?url=http%3A//www.youtube.com/watch%3Fv%3D"+req.params.idVideo+"&format=json";

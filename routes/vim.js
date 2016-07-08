@@ -74,18 +74,33 @@ vstream.download(url,res);
 
 
 function magic_url(idVideo ,cb) {
-var url="http://player.vimeo.com/video/"+idVideo;
+var url="https://player.vimeo.com/video/"+idVideo;
 request({"url":url,  "headers": { 'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; fr; rv:1.9b5) Gecko/2008041514 Firefox/3.0b5'}}, function(error,reponse,body) {
 if (error) {
-//console.log("stream "+req.params.idVideo+" "+error.message);
+console.log("stream "+req.params.idVideo+" "+error.message);
 return cb(null);
 }
-var regex = /{\"h264.*}}/;
+//var regex = /{\"h264.*}}/;
+//var regex = /:119.*\.mp4"/;
+var regex = /"progressive".*/;
 try
 {
 var info = body.match(regex)[0].split(',');
-var urlSD=JSON.parse("{"+info[2]+"}");
-} catch(err) { return cb(null); }
-cb(urlSD.url);
+for ( i in info) {
+regex=/token/
+if (info[i].match(regex) )console.log( i+ "=>" +info[i]);
+}
+regex = /https:.*expire/;
+var t = body.match(regex)[0].split(',')[0].split('"');
+regex = /mp4/;
+console.log(t);
+console.log("\n*************")
+var url = info[4].split('":"')[1].split('"');
+var urlSD=url[0];
+
+
+} catch(err) { console.log(err);return cb(null); }
+console.log(urlSD)
+cb(urlSD);
 });
 }

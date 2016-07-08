@@ -46,15 +46,6 @@ function(cb){
 var  url="http://www.dailymotion.com/embed/video/"+req.params.idVideo+"?html";
 var t=request( {url:url}, function(err,reponse,body) {
 if (err)  return cb(err);
-/*
-var regex = /\"stream_h264_url\":\"/
-var regex1 = /\"{1}/
-var info = body.split(regex);
-try {
-rurl=(info[1].split(regex1)[0]).replace(/\\/g,'')+"&redirect=0";
-} 
-*/
-//var regex=/http:\/\/www.dailymotion.com\/cdn\/H264-320x240/
 //var regex=/H264-320x240/
 //var regex=/H264-848x480/
 var regex=/H264-512x384/
@@ -96,35 +87,46 @@ vstream.childrequest(rurl,res);
 }
 
 exports.download = function(req, res){
-var rurl="nada";
 async.series([
 function(cb){
 var  url="http://www.dailymotion.com/embed/video/"+req.params.idVideo+"?html";
-request({followAllRedirects: true,url:rurl}, function(err,reponse,body) {
+var t=request( {url:url}, function(err,reponse,body) {
 if (err)  return cb(err);
-var regex = /\"stream_h264_url\":\"/
-var regex1 = /\"{1}/
+//var regex=/H264-320x240/
+//var regex=/H264-848x480/
+var regex=/H264-512x384/
+var regex1=/\"/
 var info = body.split(regex);
 try {
-rurl=(info[1].split(regex1)[0]).replace(/\\/g,'')+"&redirect=0";
-} catch(err) { return cb(err); }
+rurl="http://www.dailymotion.com/cdn/H264-512x384"+(info[1].split(regex1)[0]).replace(/\\/g,'')+"&redirect=0";
+logger.debug("rurl="+rurl);
+}
+catch(err) { return cb(err); }
 return cb(null);
 });
-},
+}
+,
 function(cb){
-var x = request(rurl, function(err,reponse,body) {
-if (err) return cb(err);
+console.log("1 "+rurl);
+request({followAllRedirects: true,url:rurl}, function(err,reponse,body) {
+if (err) {
+return cb(err);
+}
+console.log("2 "+body);
 rurl=body;
 return cb(null);
 });
 }
 ],function(err){ // At least Function
+console.log("3"+rurl);
 if (err) {
-logger.error("download "+req.params.idVideo+" "+err.message);
+logger.error("stream "+req.params.idVideo+" "+err.message);
 res.send("Video Not Found",404);
 }
- else // Download the video
+ else // Stream the video
 {
+//vstream.hrequest(rurl,res);
+//vstream.sagent(rurl,res);
 vstream.download(rurl,res);
 }
 });

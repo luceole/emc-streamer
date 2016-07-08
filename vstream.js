@@ -46,10 +46,11 @@ res.on('finish', function(src) {
 });
 
 }
-exports.download = function(url,res)
+exports.download = function(url,res,video_type)
 {
-logger.info("download=>"+url);
-res.setHeader("Content-Type", "application/force-download");
+logger.info("download=>"+url+ " "+video_type);
+res.setHeader("Content-Type", "application/force-download);
+//res.setHeader("Content-disposition", "attachement;");
 hyperquest(url).pipe(res);
 }
 
