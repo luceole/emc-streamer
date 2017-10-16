@@ -85,10 +85,10 @@ exports.download = function (req, res) { // TODO
 function magic_url(idVideo, cb) {
   var url = "https://player.vimeo.com/video/" + idVideo;
   request({
-    "url": url
-    // "headers": {
-    //  'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; fr; rv:1.9b5) Gecko/2008041514 Firefox/3.0b5'
-    //}
+    "url": url,
+    "headers": {
+      'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; fr; rv:1.9b5) Gecko/2008041514 Firefox/3.0b5'
+    }
   }, function (error, reponse, body) {
     if (error) {
       console.log("stream " + error.message);
