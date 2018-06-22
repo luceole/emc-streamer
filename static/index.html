@@ -12,6 +12,18 @@
     <a href="/vimeo/play/80994084"> Play  </a>&nbsp;
     <a href="/vimeo/download/80994084"> Download  </a>&nbsp;
     <a href="/vimeo/geturl/80994084"> getUrl </a>&nbsp;
+<br>
+<form id="frm1" >
+  ID Vidéo <input type="text" name="idname"><br>
+  <input type="button" onclick="vmFunction(idname.value)" value="Submit">
+</form>
+
+<script>
+function vmFunction(idname) {
+window.open("/vimeo/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
+}
+</script>
+
   </p>
   <p>
     <br> YouTube :
@@ -19,17 +31,39 @@
     <a href="/yt/play/BTAqyRy-tFQ"> Play  </a>&nbsp;
     <a href="/yt/download/BTAqyRy-tFQ"> Download </a>&nbsp;
     <a href="/yt/geturl/BTAqyRy-tFQ"> getUrl </a>&nbsp;
+<br>
+<form id="frm2" >
+  ID Vidéo <input type="text" name="idname"><br>
+  <input type="button" onclick="ytFunction(idname.value)" value="Submit">
+</form>
+
+<script>
+function ytFunction(idname) {
+window.open("/yt/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
+}
+</script>
+
   </p>
   <br> DailyMotion :
   <a href="/dlm/info/x55xe20"> Infos </a>&nbsp;
   <a href="/dlm/play/x55xe20"> Play  </a>&nbsp;
   <a href="/dlm/Download/x55xe20"> Download </a>&nbsp;
+<br>
+<form id="frm3" >
+  ID Vidéo <input type="text" name="idname"><br>
+  <input type="button" onclick="dmFunction(idname.value)" value="Submit">
+</form>
+
+<script>
+function dmFunction(idname) {
+window.open("/dlm/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
+}
+</script>
+
   </p>
   <br>
   <h2> Local Videos </h2>
   <p>
-    <a href="/videos/a.mp4"> Play Local MP4 </a>&nbsp;
-    <br><br>
     <a href="/media"> Parse Public Directory  </a>&nbsp;
   </p>
 </body>
