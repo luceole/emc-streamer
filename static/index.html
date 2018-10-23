@@ -12,6 +12,7 @@
     <a href="/vimeo/play/80994084"> Play  </a>&nbsp;
     <a href="/vimeo/download/80994084"> Download  </a>&nbsp;
     <a href="/vimeo/geturl/80994084"> getUrl </a>&nbsp;
+    <a href="/vimeo/getoembed/80994084"> getOembed </a>&nbsp;
 <br>
 <form id="frm1" >
   ID Vidéo <input type="text" name="idname"><br>
@@ -31,13 +32,35 @@ window.open("/vimeo/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, wi
     <a href="/yt/play/BTAqyRy-tFQ"> Play  </a>&nbsp;
     <a href="/yt/download/BTAqyRy-tFQ"> Download </a>&nbsp;
     <a href="/yt/geturl/BTAqyRy-tFQ"> getUrl </a>&nbsp;
+    <a href="/yt/getoembed/BTAqyRy-tFQ"> getOembed </a>&nbsp;
 <br>
 <form id="frm2" >
   ID Vidéo <input type="text" name="idname"><br>
   <input type="button" onclick="ytFunction(idname.value)" value="Submit">
+  <input type="button" onclick="ytEmbed(idname.value)" value="Submit">
+<br>
+<div id="youtube" class="youtube" id="_Jmisv1Spck" style="width:560px; height: 315px;">
+</div>
 </form>
 
 <script>
+function ytEmbed(idname){
+var videos = document.getElementsByClassName("youtube"); 
+ var youtube = document.getElementById("youtube");  
+  
+    // Create an iFrame with autoplay set to true
+    var iframe = document.createElement("iframe");
+    iframe.setAttribute("src","http://localhost:3000/yt/getembed/"+idname);
+    //iframe.setAttribute("src",
+    //      "https://www.youtube.com/embed/7n7S-dA7khk"
+    //   + "?autoplay=1&autohide=1&border=0&wmode=opaque&enablejsapi=1"); 
+    
+    // The height and width of the iFrame should be the same as parent
+    iframe.style.width  = youtube.style.width;
+    iframe.style.height = youtube.style.height;
+    youtube.appendChild(iframe);
+}
+
 function ytFunction(idname) {
 window.open("/yt/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
 }
@@ -52,13 +75,30 @@ window.open("/yt/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width
 <form id="frm3" >
   ID Vidéo <input type="text" name="idname"><br>
   <input type="button" onclick="dmFunction(idname.value)" value="Submit">
+  <input type="button" onclick="embed(idname.value)" value="Submit">
 </form>
 
 <script>
 function dmFunction(idname) {
 window.open("/dlm/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
 }
-</script>
+
+function embed(idname){
+ var iframe = document.createElement("iframe");
+    iframe.setAttribute("src", "/yt/geturl/BTAqyRy-tFQ");
+    //iframe.setAttribute("src",
+     //     "https://www.youtube.com/embed/" + idname 
+      //  + "?autoplay=1&autohide=1&border=0&wmode=opaque&enablejsapi=1"); 
+    
+    // The height and width of the iFrame should be the same as parent
+    iframe.style.width  = this.style.width;
+    iframe.style.height = this.style.height;
+       
+    // Replace the YouTube thumbnail with YouTube HTML5 Player
+    this.parentNode.replaceChild(iframe, this);
+
+}
+script>
 
   </p>
   <br>

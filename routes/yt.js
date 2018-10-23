@@ -91,3 +91,14 @@ exports.getoembed = function (req, res) {
     res.send(req.query.callback + '(' + JSON.stringify(oembed) + ');');
   });
 }
+
+exports.getembed = function (req,res) {
+  console.log("getOembed :" + req.params.idVideo);
+  var url = "http://www.youtube.com/oembed?url=http%3A//www.youtube.com/watch%3Fv%3D" + req.params.idVideo + "&format=json";
+  request(url, function (error, reponse, body) {
+  obj = JSON.parse(reponse.body);
+  console.log(obj.html)
+    res.send(obj.html );
+  });
+
+}
