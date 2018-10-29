@@ -36,27 +36,23 @@ app.use(log4js.connectLogger(logger, {
 app.use(bodyParser());
 app.use(methodOverride());
 
-/*
-app.use(function (req, res, next) {
-  logger.debug("%s:%d=%s", process.pid, ++Cpt, req.url);
-  next();
-});
-*/
 
 var newSettings = {
   "rootFolder": config.videosStream.rootFolder,
   "rootPath": ""
 }
 vidStreamer.settings(newSettings);
+
 // development only
 if ('development' == app.get('env')) {
   app.use(errorHandler());
 }
-// 
+//
 app.use('/media', express.static(config.serveIndex.rootFolder), serveIndex(config.serveIndex.rootFolder, {
   'icons': true
 }))
 app.use('/videos', vidStreamer);
+
 // Derniere route = static
 app.use('/demo', express.static(path.join(__dirname, '/static')));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -73,17 +69,19 @@ app.get('/yt/download/:idVideo/:format?', yt.download);
 app.get('/dlm/info/:idVideo', dlm.info);
 app.get('/dlm/geturl/:idVideo', dlm.geturl);
 app.get('/dlm/getoembed/:idVideo', dlm.getoembed);
+app.get('/dlm/getembed/:idVideo', dlm.getembed);
 app.use('/dlm/stream/:idVideo', dlm.stream);
 app.get('/dlm/play/:idVideo', dlm.stream);
 app.get('/dlm/download/:idVideo', dlm.download);
 // Vimeo
 app.get('/vimeo/getoembed/:idVideo', vim.getoembed);
+app.get('/vimeo/getembed/:idVideo', vim.getembed);
 app.get('/vimeo/geturl/:idVideo', vim.geturl);
 app.get('/vimeo/stream/:idVideo', vim.stream);
 app.get('/vimeo/play/:idVideo', vim.stream);
 app.get('/vimeo/info/:idVideo', vim.info);
 app.get('/vimeo/download/:idVideo', vim.download);
-// Videos Locales
+
 
 app.get('/test', function (req, res) {
   res.send(util.inspect(process.memoryUsage()));
@@ -96,8 +94,6 @@ app.get('/kill', function (req, res) {
   res.send("KILL OK");
   cluster.worker.kill();
 });
-// Pour rire !
-//app.get('/*', routes.index);  // Crazy Proxy ;-)
 
 http.createServer(app).listen(app.get('port'), function () {
   logger.info('Express server %s listening on port %s ', process.pid, app.get('port'));

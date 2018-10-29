@@ -21,7 +21,9 @@ exports.info = function (req, res) {
       res.send("Not Found", 404);
       return;
     }
-    res.send(JSON.parse(body));
+    //res.send(JSON.parse(body));
+    var infos= JSON.parse(body)
+    res.send(infos.id + " <br>" + infos.title);
   });
 };
 /*
@@ -154,5 +156,15 @@ exports.getoembed = function (req, res) {
     }
     var oembed = reponse.body;
     res.send(req.query.callback + '(' + JSON.stringify(oembed) + ');');
+  });
+}
+
+exports.getembed = function (req,res) {
+  console.log("getOembed :" + req.params.idVideo);
+  var url = "http://www.dailymotion.com/services/oembed?url=http%3A//www.dailymotion.com/video/" + req.params.idVideo + "&format=json";
+  request(url, function (error, reponse, body) {
+  obj = JSON.parse(reponse.body);
+  //console.log(obj.html)
+    res.send(obj.html );
   });
 }
