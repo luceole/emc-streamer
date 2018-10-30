@@ -20,11 +20,11 @@ API:
 
 type : [yt => YouTube, dlm => DailyMotion ,vimeo => Vimeo]
 
-{type]}/stream/:idVideo :        Stream the video
-{type}/play/:idVideo    :        Play the video   /* Stream and play are the same action */
+- {type]}/stream/:idVideo :        Stream the video
+- {type}/play/:idVideo    :        Play the video   /* Stream and play are the same action */
 
-{type}/download/:idVideo :       Download video file
-{type}/info/:idVideo :           Get name and title
-{type}/geturl/:idVideo :         Get secret-url for stream or download
-{type}/yt/getoembed/:idVideo :   Wrapper for Oembed call
-{type}/getembed/:idVideo :       Get the HTML for embed video
+- {type}/download/:idVideo :       Download video file
+- {type}/info/:idVideo :           Get name and title
+- {type}/geturl/:idVideo :         Get secret-url for stream or download
+- {type}/yt/getoembed/:idVideo :   Wrapper for Oembed call
+- {type}/getembed/:idVideo :       Get the HTML for embed video
