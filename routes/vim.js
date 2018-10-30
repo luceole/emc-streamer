@@ -13,7 +13,9 @@ exports.info = function (req, res) {
       console.log("getInfo " + error.message);
       res.send("Not Found", 404);
     } else
-      res.send(JSON.parse(body));
+    // res.send(JSON.parse(body));
+    var infos= JSON.parse(body)
+    res.send(infos[0].id + " <br>" + infos[0].title);
   });
 }
 
@@ -45,7 +47,15 @@ exports.getoembed = function (req, res) {
     res.send(req.query.callback + '(' + JSON.stringify(oembed) + ');');
   });
 }
-
+exports.getembed = function (req,res) {
+  console.log("getembed :" + req.params.idVideo);
+  var url = "http://vimeo.com/api/oembed.json?url=http://vimeo.com/" + req.params.idVideo + "&format=json";
+  request(url, function (error, reponse, body) {
+  obj = JSON.parse(reponse.body);
+  //console.log(obj.html)
+    res.send(obj.html );
+  });
+}
 /*
  * STREAM video  WEBM ou MP4
  */

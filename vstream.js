@@ -3,31 +3,22 @@ var hyperquest = require('hyperquest');
 var superagent = require('superagent');
 var spawn = require('child_process').spawn;
 
-exports.mrequest = function (url, res) {
-  loger.debug("request Stream=>" + url);
-  res.setHeader("Content-Type", "video/mp4");
-  var v = url.split('#')[0].split('?');
-  u = v[0];
-  var uri = {
-    'url': u,
-    'headers': {
-      'User-Agent': 'node/request'
-    },
-    qs: {
-      'auth': v[1].split('auth=')[1]
-    }
-  };
-  var req = request(uri).pipe(res);
-}
-
-exports.hrequest = function (url, res, video_type) {
+exports.hrequest = function (url, res, video_type) {  //Default Method
   logger.debug("Hyperquest Stream=>" + url + " " + video_type);
-  console.log("Hyperquest Stream=>" + url + " " + video_type);
   if (video_type)
     res.setHeader("Content-Type", "video/" + video_type);
   else
     res.setHeader("Content-Type", "video/mp4");
-  hyperquest(url).pipe(res);
+    request(url).pipe(res)
+    //hyperquest(url,{ method: 'GET',timeout: 10000}).pipe(res);
+}
+exports.stdrequest = function (url, res, video_type) {  //Default Method
+  logger.debug("Standart Request Stream=" + url + " " + video_type);
+  if (video_type)
+    res.setHeader("Content-Type", "video/" + video_type);
+  else
+    res.setHeader("Content-Type", "video/mp4");
+    request(url).pipe(res)
 }
 
 exports.sagent = function (url, res, video_type) {
@@ -58,9 +49,9 @@ exports.sagent = function (url, res, video_type) {
 exports.download = function (url, res, filename, fmt) {
   logger.info("download=>" + url)
   console.log("download=>" + filename);
-  //res.setHeader('Content-Description: File Transfer');
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader('Content-Disposition', 'attachment; filename=' + filename + "." + fmt);
+  //res.setHeader('Content-Description: File Transfer');
   //res.setHeader('Content-Transfer-Encoding: binary');
   //res.setHeader('Expires: 0');
   //res.setHeader('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -72,10 +63,8 @@ exports.download = function (url, res, filename, fmt) {
 }
 
 exports.childrequest = function (url, res, video_type) {
-
   logger.debug("childRequest=>" + url + " " + video_type);
   child = spawn('node', ['childrequest.js', url]);
-  //res.contentType = 'video/mp4';
   if (video_type)
     res.setHeader("Content-Type", "video/" + video_type);
   else
@@ -89,3 +78,20 @@ exports.childrequest = function (url, res, video_type) {
     logger.debug('child process exited with code ' + code);
   });
 }
+
+// exports.mrequest = function (url, res) { // Obsolete
+//   loger.debug("request Stream=>" + url);
+//   res.setHeader("Content-Type", "video/mp4");
+//   var v = url.split('#')[0].split('?');
+//   u = v[0];
+//   var uri = {
+//     'url': u,
+//     'headers': {
+//       'User-Agent': 'node/request'
+//     },
+//     qs: {
+//       'auth': v[1].split('auth=')[1]
+//     }
+//   };
+//   var req = request(uri).pipe(res);
+// }

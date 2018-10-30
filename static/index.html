@@ -1,69 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+</style>
+</head>
+
 <body>
-  <center>
-    <h1> EMC Streamer </h1>
-  </center>
 
-  <h3>For testing ... </h3>
-
+  <div class="tab">
+    <center>  <h2> EMC STREAMER </h2></center>
+    <button class="tablinks" onclick="openTab(event, 'TEST')">Basic Tests</button>
+    <button class="tablinks" onclick="openTab(event, 'DEMO')">Play Internet Videos</button>
+      <button class="tablinks" onclick="openTab(event, 'LOCAL')">Play local Videos</button>
+  </div>
+  <div id="TEST" class="tabcontent">
+  <h3>Fix Url For testing ... </h3>
   <h2> Internet Videos </h2>
   <p>
-    <br> Viméo :
-    <a href="/vimeo/info/80994084"> Infos </a>&nbsp;
-    <a href="/vimeo/play/80994084"> Play  </a>&nbsp;
-    <a href="/vimeo/download/80994084"> Download  </a>&nbsp;
-    <a href="/vimeo/geturl/80994084"> getUrl </a>&nbsp;
-<br>
-<form id="frm1" >
-  ID Vidéo <input type="text" name="idname"><br>
-  <input type="button" onclick="vmFunction(idname.value)" value="Submit">
-</form>
-
-<script>
-function vmFunction(idname) {
-window.open("/vimeo/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
-}
-</script>
-
+    <br> ViMéo :
+    <a href="/vimeo/play/80994084" target="_blank"> Play  </a>&nbsp;
+    <a href="/vimeo/download/80994084" target="_blank"> Download  </a>&nbsp;
+    <a href="/vimeo/getembed/80994084" target="_blank"> Play from Viméo</a>&nbsp;
+    <a href="/vimeo/info/80994084" target="_blank"> Infos </a>&nbsp;
+    <!-- <a href="/vimeo/geturl/80994084" target="_blank"> getUrl </a>&nbsp;
+    <a href="/vimeo/getoembed/80994084" target="_blank"> getOembed </a>&nbsp; -->
   </p>
   <p>
     <br> YouTube :
-    <a href="/yt/info/BTAqyRy-tFQ"> Infos </a>&nbsp;
-    <a href="/yt/play/BTAqyRy-tFQ"> Play  </a>&nbsp;
-    <a href="/yt/download/BTAqyRy-tFQ"> Download </a>&nbsp;
-    <a href="/yt/geturl/BTAqyRy-tFQ"> getUrl </a>&nbsp;
-<br>
-<form id="frm2" >
-  ID Vidéo <input type="text" name="idname"><br>
-  <input type="button" onclick="ytFunction(idname.value)" value="Submit">
-</form>
-
-<script>
-function ytFunction(idname) {
-window.open("/yt/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
-}
-</script>
-
+    <a href="/yt/play/BTAqyRy-tFQ" target="_blank"> Play  </a>&nbsp;
+    <a href="/yt/download/BTAqyRy-tFQ" target="_blank"> Download </a>&nbsp;
+    <a href="/yt/getembed/BTAqyRy-tFQ" target="_blank"> Play from YouTube</a>&nbsp;
+    <a href="/yt/info/BTAqyRy-tFQ" target="_blank"> Infos </a>&nbsp;
+    <!-- <a href="/yt/geturl/BTAqyRy-tFQ" target="_blank"> getUrl </a>&nbsp;
+    <a href="/yt/getoembed/BTAqyRy-tFQ" target="_blank"> getOembed </a>&nbsp; -->
   </p>
   <br> DailyMotion :
-  <a href="/dlm/info/x55xe20"> Infos </a>&nbsp;
-  <a href="/dlm/play/x55xe20"> Play  </a>&nbsp;
-  <a href="/dlm/Download/x55xe20"> Download </a>&nbsp;
-<br>
-<form id="frm3" >
-  ID Vidéo <input type="text" name="idname"><br>
-  <input type="button" onclick="dmFunction(idname.value)" value="Submit">
-</form>
-
-<script>
-function dmFunction(idname) {
-window.open("/dlm/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
-}
-</script>
-
+  <a href="/dlm/play/x55xe20" target="_blank"> Play  </a>&nbsp;
+  <a href="/dlm/Download/x55xe20" target="_blank"> Download </a>&nbsp;
+    <a href="/dlm/getembed/x55xe20" target="_blank"> Play from DailyMotion </a>&nbsp;
+  <a href="/dlm/info/x55xe20" target="_blank"> Infos </a>&nbsp;
   </p>
   <br>
-  <h2> Local Videos </h2>
+</div>
+  <div id="LOCAL" class="tabcontent">
+  <h2> Local Videos </h2> <p> <button class="tablinks" onclick="localframe()">Retour</button> </p>
+  <iframe src="/media" name="lcframe" id="lcframe" width="800" height="600" frameborder=0></iframe>
   <p>
-    <a href="/media"> Parse Public Directory  </a>&nbsp;
-  </p>
+    <!-- <a href="/media"> Parse Public Directory  </a>&nbsp;
+  </p> -->
+</div>
+<div id="DEMO" class="tabcontent">
+
+<iframe src="" name="myframe" id="myframe" width="650" height="370" frameborder=0></iframe>
+<p>
+<hr>
+<p>
+  <form id="frm1" >
+    Viméo ID Vidéo  <input type="text" name="idname" value="288981945">
+    <input type="button" onclick="FramePlay(idname.value,'vimeo')" value="Play">
+    <input type="button" onclick="FrameEmbed(idname.value,'vimeo')" value="Embed">
+  </form>
+  <br>
+  <form id="frm2" >
+    Youtube ID Vidéo <input type="text" name="idname" value="G_sqvnMABjA">
+    <input type="button" onclick="FramePlay(idname.value,'yt')" value="Play">
+    <input type="button" onclick="FrameEmbed(idname.value,'yt')" value="Embed">
+  </form>
+  <br>
+  <form id="frm3" >
+    DailyMotion ID Vidéo <input type="text" name="idname" value="x55xe20">
+      <input type="button" onclick="FramePlay(idname.value,'dlm')" value="Play">
+    <input type="button" onclick="FrameEmbed(idname.value,'dlm')" value="Embed">
+  </form>
+<br>
+
+<script>
+  function localframe(){
+var lcf = document.getElementById("lcframe");
+     lcf.src = "/media";
+  }
+  function FramePlay(idname,target){
+  var player = document.getElementById("myframe");
+       var url = "/"+target+"/play/"+idname
+       player.src = url;
+  }
+  function FrameEmbed(idname,target){
+  var player = document.getElementById("myframe");
+       var url = "/"+target+"/getembed/"+idname
+       player.src = url;
+  }
+  function ytFunction(idname) {
+  window.open("/yt/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
+  }
+  function vmFunction(idname) {
+  window.open("/vimeo/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
+  }
+  function dmFunction(idname) {
+  window.open("/dlm/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
+  }
+
+ function openTab(evt, Name) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(Name).style.display = "block";
+    evt.currentTarget.className += " active";
+    }
+</script>
+
 </body>
