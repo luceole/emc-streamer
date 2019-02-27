@@ -1,0 +1,19 @@
+# Sample service file
+# Adapt it to your installation
+[Unit]
+Description= EmcStreamer (via forever)
+Requires=network.target
+After=network.target
+
+[Service]
+Type=forking
+Environment=ENV=production
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=PORT=80
+WorkingDirectory=/home/emc-streamer
+ExecStart=/usr/local/bin/forever start --pidFile /var/run/emc-streamer.pid /home/emc-streamer/server.js
+ExecStop=/usr/local/bin/forever stop /home/emc-streamer/server.js
+PIDFile=/var/run/emc-streamer.pid
+User=root
+[Install]
+WantedBy=multi-user.target
