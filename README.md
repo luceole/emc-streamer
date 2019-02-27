@@ -9,6 +9,7 @@ Installation :
 
 - Git clone
 - npm install
+- modify config/default.js
 - node server.js (multi process) or node app.js
 
 connect to : http://localhost:3000/demo
