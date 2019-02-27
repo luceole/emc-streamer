@@ -2,10 +2,10 @@ module.exports = {
 
   serveIndex: {
     rootPath: '',
-    rootFolder: 'public'
+    rootFolder: '/app/public'
   },
   videosStream: {
-    rootFolder: '/home/luceole/Devel/GitProjets/emc-streamer/public/'
+    rootFolder: '/app/emc-streamer'
   }
 
 }
