@@ -22,7 +22,7 @@
     "vid-streamer": "^1.0.0",
     "ytdl-core": "^0.26.3"
   },
-    "devDependencies": {
-  "eslint": "^2.12.0"
-    }
+  "devDependencies": {
+    "eslint": ">=4.18.2"
+  }
 }
