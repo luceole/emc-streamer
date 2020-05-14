@@ -6,7 +6,6 @@
 */
 var cluster = require('cluster');
 var log4js = require('log4js');
-log4js.clearAppenders() 
 log4js.configure('log4js_configuration.json', {});
 logger = log4js.getLogger();
 

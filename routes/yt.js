@@ -50,6 +50,8 @@ exports.stream = function (req, res) {
 
   console.log(req.params)
   console.log("Stream => " + req.params.idVideo)
+  ytdl('http://www.youtube.com/watch?v='+req.params.idVideo).pipe(res)
+/*
   ytdl.getInfo('https://www.youtube.com/watch?v=' + req.params.idVideo, function (err, infos) {
     if (err) {
       console.log("getUrl " + req.params.idVideo + " " + err.message);
@@ -68,10 +70,10 @@ exports.stream = function (req, res) {
     vstream.hrequest(format.url, res, fmt);
      //vstream.stdrequest(format.url, res, fmt);
     // alternatives ways
-    //ytdl('http://www.youtube.com/watch?v='+req.params.idVideo).pipe(res)
     //vstream.sagent(format.url, res, fmt);
     //vstream.childrequest(format.url, res, fmt);
-  });
+  A});
+*/
 }
 
 exports.download = function (req, res) {

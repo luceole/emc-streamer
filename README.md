@@ -4,6 +4,7 @@ Backend for EMC Project (E-Media Center)
 - Retrieves url(s) of media file from Youtube, Vimeo, DailyMotion
 - Stream local videos files
 
+Use nodejs > 10
 
 Installation :
 

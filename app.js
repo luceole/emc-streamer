@@ -19,7 +19,6 @@ var serveIndex = require('serve-index')
 var config = require('config');
 console.log(config)
 var Cpt = 0;
-log4js.clearAppenders()
 log4js.configure('log4js_configuration.json', {});
 if (typeof logger !== undefined) {
   logger = log4js.getLogger('log4js');
