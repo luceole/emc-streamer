@@ -1,23 +1,28 @@
 // Videos On YouTube
-var vstream = require('../vstream.js');
-var fs = require('fs');
-var request = require('request');
-var ytdl = require('ytdl-core');
-var url = require('url');
+var vstream = require("../vstream.js");
+var fs = require("fs");
+var request = require("request");
+var ytdl = require("ytdl-core");
+var url = require("url");
 
 /*
  * GET Video Info
  */
 
 exports.info = function (req, res) {
-  ytdl.getInfo('https://www.youtube.com/watch?v=' + req.params.idVideo, function (err, infos) {
-    if (err) {
-      console.log("getInfo " + err.message);
-      res.send("Not Found", 404);
-      return;
-    }
+  ytdl.getInfo(req.params.idVideo).then((infos) => {
+    // if (err) {
+    //   console.log("getInfo " + err.message);
+    //   res.send("Not Found", 404);
+    //   return;
+    // }
     //res.send(infos);
-    res.send(infos.video_id + " <br>" + infos.title);
+    res.send(
+      "<b>" +
+        infos.videoDetails.title +
+        "</b><br><p>" +
+        infos.videoDetails.description
+    );
   });
 };
 
@@ -25,21 +30,24 @@ exports.info = function (req, res) {
  * GET video url video  webm ou mp4
  */
 exports.geturl = function (req, res) {
-  ytdl.getInfo('https://www.youtube.com/watch?v=' + req.params.idVideo, function (err, infos) {
-    if (err) {
-      console.log("getUrl " + req.params.idVideo + " " + err.message);
-      res.send("Not Found", 404);
-      return;
+  ytdl.getInfo(
+    "https://www.youtube.com/watch?v=" + req.params.idVideo,
+    function (err, infos) {
+      if (err) {
+        console.log("getUrl " + req.params.idVideo + " " + err.message);
+        res.send("Not Found", 404);
+        return;
+      }
+      var fmt = req.params.format == "mp4" ? req.params.format : "webm";
+      var format = infos.formats.filter(function (format) {
+        return format.container === fmt;
+      })[0];
+      var reponse = {
+        url: format.url,
+      };
+      res.send(req.query.callback + "(" + JSON.stringify(reponse) + ");");
     }
-    var fmt = (req.params.format == "mp4") ? req.params.format : "webm";
-    var format = infos.formats.filter(function (format) {
-      return format.container === fmt;
-    })[0];
-    var reponse = {
-      url: format.url
-    };
-    res.send(req.query.callback + '(' + JSON.stringify(reponse) + ');');
-  });
+  );
 };
 
 /*
@@ -47,11 +55,12 @@ exports.geturl = function (req, res) {
  */
 
 exports.stream = function (req, res) {
-
-  console.log(req.params)
-  console.log("Stream => " + req.params.idVideo)
-  ytdl('http://www.youtube.com/watch?v='+req.params.idVideo).pipe(res)
-/*
+  //console.log(req.params)
+  console.log("Stream => " + req.params.idVideo);
+  ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
+    filter: (format) => format.container === "mp4",
+  }).pipe(res);
+  /*
   ytdl.getInfo('https://www.youtube.com/watch?v=' + req.params.idVideo, function (err, infos) {
     if (err) {
       console.log("getUrl " + req.params.idVideo + " " + err.message);
@@ -74,42 +83,49 @@ exports.stream = function (req, res) {
     //vstream.childrequest(format.url, res, fmt);
   A});
 */
-}
+};
 
 exports.download = function (req, res) {
-  ytdl.getInfo('https://www.youtube.com/watch?v=' + req.params.idVideo, function (err, infos) {
-    if (err) {
-      console.log("getUrl " + req.params.idVideo + " " + err.message);
-      res.send("Not Found", 404);
-      return;
+  ytdl.getInfo(
+    "https://www.youtube.com/watch?v=" + req.params.idVideo,
+    function (err, infos) {
+      if (err) {
+        console.log("getUrl " + req.params.idVideo + " " + err.message);
+        res.send("Not Found", 404);
+        return;
+      }
+      var fmt = req.params.format == "mp4" ? req.params.format : "webm";
+      //console.log(fmt);
+      var format = infos.formats.filter(function (format) {
+        return format.container === fmt;
+      })[0];
+      vstream.download(format.url, res, req.params.idVideo, fmt);
     }
-    var fmt = (req.params.format == "mp4") ? req.params.format : "webm";
-    //console.log(fmt);
-    var format = infos.formats.filter(function (format) {
-      return format.container === fmt;
-    })[0];
-    vstream.download(format.url, res, req.params.idVideo, fmt);
-
-  });
-}
+  );
+};
 
 exports.getoembed = function (req, res) {
   console.log("getOembed :" + req.params.idVideo);
-  var url = "https://www.youtube.com/oembed?url=http%3A//www.youtube.com/watch%3Fv%3D" + req.params.idVideo + "&format=json";
+  var url =
+    "https://www.youtube.com/oembed?url=http%3A//www.youtube.com/watch%3Fv%3D" +
+    req.params.idVideo +
+    "&format=json";
   //request(url).pipe(res);
   request(url, function (error, reponse, body) {
     var oembed = reponse.body;
-    res.send(req.query.callback + '(' + JSON.stringify(oembed) + ');');
+    res.send(req.query.callback + "(" + JSON.stringify(oembed) + ");");
   });
-}
+};
 
-exports.getembed = function (req,res) {
+exports.getembed = function (req, res) {
   console.log("getOembed :" + req.params.idVideo);
-  var url = "https://www.youtube.com/oembed?url=http%3A//www.youtube.com/watch%3Fv%3D" + req.params.idVideo + "&format=json";
+  var url =
+    "https://www.youtube.com/oembed?url=http%3A//www.youtube.com/watch%3Fv%3D" +
+    req.params.idVideo +
+    "&format=json";
   request(url, function (error, reponse, body) {
-  obj = JSON.parse(reponse.body);
-  console.log(reponse.body)
-    res.send(obj.html );
+    obj = JSON.parse(reponse.body);
+    console.log(reponse.body);
+    res.send(obj.html);
   });
-
-}
+};

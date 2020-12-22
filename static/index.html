@@ -91,6 +91,7 @@ body {font-family: Arial;}
 <div id="DEMO" class="tabcontent">
 
 <iframe src="" name="myframe" id="myframe" width="650" height="370" frameborder=0></iframe>
+<iframe src="" name="infoframe" id="infoframe" width="650" height="370" frameborder=0></iframe>
 <p>
 <hr>
 <p>
@@ -119,6 +120,9 @@ var lcf = document.getElementById("lcframe");
      lcf.src = "/media";
   }
   function FramePlay(idname,target){
+    var info = document.getElementById("infoframe");
+     info.src = "/" + target + "/info/" + idname
+
   var player = document.getElementById("myframe");
        var url = "/"+target+"/play/"+idname
        player.src = url;
