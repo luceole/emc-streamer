@@ -47,11 +47,18 @@ if ('development' == app.get('env')) {
   app.use(errorHandler());
 }
 //
-app.use('/medias', vidStreamer);
 app.use('/media', express.static(config.serveIndex.rootFolder), serveIndex(config.serveIndex.rootFolder, {
   'icons': true
 }))
-app.use('/videos', vidStreamer);
+app.use('/medias', express.static(config.serveIndex.rootFolder), serveIndex(config.serveIndex.rootFolder, {
+  'icons': true
+}))
+app.use('/videos', express.static(config.serveIndex.rootFolder), serveIndex(config.serveIndex.rootFolder, {
+  'icons': true
+}))
+app.use('/video', express.static(config.serveIndex.rootFolder), serveIndex(config.serveIndex.rootFolder, {
+  'icons': true
+}))
 
 // Derniere route = static
 app.use('/demo', express.static(path.join(__dirname, '/static')));
