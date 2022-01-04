@@ -48,6 +48,9 @@ if ('development' == app.get('env')) {
 }
 //
 app.use('/medias', vidStreamer);
+app.use('/media', express.static(config.serveIndex.rootFolder), serveIndex(config.serveIndex.rootFolder, {
+  'icons': true
+}))
 app.use('/videos', vidStreamer);
 
 // Derniere route = static
