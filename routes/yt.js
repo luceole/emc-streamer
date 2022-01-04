@@ -10,6 +10,9 @@ var url = require("url");
  */
 
 exports.info = function (req, res) {
+ 
+  if (ytdl.validateID(req.params.idVideo)) {
+  try {
   ytdl.getInfo(req.params.idVideo).then((infos) => {
     // if (err) {
     //   console.log("getInfo " + err.message);
@@ -24,12 +27,20 @@ exports.info = function (req, res) {
         infos.videoDetails.description
     );
   });
+}
+catch (error) {
+  console.error(error);
+  res.send("Video Not Found");
+ 
+}
+  } else {res.send("Video Not Found");}
 };
 
 /*
  * GET video url video  webm ou mp4
  */
 exports.geturl = function (req, res) {
+  console.log("test  "+ytdl.validateID(req.params.idVideo));
   ytdl.getInfo(
     "https://www.youtube.com/watch?v=" + req.params.idVideo,
     function (err, infos) {
@@ -56,10 +67,19 @@ exports.geturl = function (req, res) {
 
 exports.stream = function (req, res) {
   //console.log(req.params)
-  console.log("Stream => " + req.params.idVideo);
+ 
+  if (ytdl.validateID(req.params.idVideo)) {
+  try {
   ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
     filter: (format) => format.container === "mp4",
   }).pipe(res);
+}
+catch (error) {
+  console.error("catch " + error);
+  res.send("Video Not Found");
+ 
+}}
+else res.end();
   /*
   ytdl.getInfo('https://www.youtube.com/watch?v=' + req.params.idVideo, function (err, infos) {
     if (err) {

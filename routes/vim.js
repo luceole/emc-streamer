@@ -8,14 +8,17 @@ var vstream = require('../vstream.js');
 
 exports.info = function (req, res) {
   var url = "http://vimeo.com/api/v2/video/" + req.params.idVideo + ".json";
-  request(url, function (error, reponse, body) {
-    if (error) {
-      console.log("getInfo " + error.message);
+  request(url, function (error, response, body) {
+    console.log("info")
+    if (error || response.statusCode != 200) {
+      console.log("error "+ response.statusCode)
       res.send("Not Found", 404);
-    } else
+    } else 
+    {
     // res.send(JSON.parse(body));
     var infos= JSON.parse(body)
     res.send(infos[0].id + " <br>" + infos[0].title);
+    }
   });
 }
 
@@ -99,9 +102,9 @@ function magic_url(idVideo, cb) {
     "headers": {
       'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; fr; rv:1.9b5) Gecko/2008041514 Firefox/3.0b5'
     }
-  }, function (error, reponse, body) {
-    if (error) {
-      console.log("stream " + error.message);
+  }, function (error, response, body) {
+    if (error  || response.statusCode != 200) {
+      console.log("stream " + error);
       return cb(null);
     }
     var regex = /video\/mp4.*/;

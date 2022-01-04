@@ -89,9 +89,8 @@ body {font-family: Arial;}
   </p> -->
 </div>
 <div id="DEMO" class="tabcontent">
-
 <iframe src="" name="myframe" id="myframe" width="650" height="370" frameborder=0></iframe>
-<iframe src="" name="infoframe" id="infoframe" width="650" height="370" frameborder=0></iframe>
+<iframe src="" name="infoframe" id="infoframe" width="650" height="200" frameborder=0></iframe>
 <p>
 <hr>
 <p>
@@ -115,11 +114,21 @@ body {font-family: Arial;}
 <br>
 
 <script>
+  function ytUri(v) {
+  console.log("ytUri "+v)
+  if (v.includes('http')) { 
+    return v.split('watch?v=')[1]
+  } else
+  {return v};
+}
   function localframe(){
 var lcf = document.getElementById("lcframe");
      lcf.src = "/media";
   }
   function FramePlay(idname,target){
+    if (target=="yt") {
+      idname=ytUri(idname)
+    }
     var info = document.getElementById("infoframe");
      info.src = "/" + target + "/info/" + idname
 
