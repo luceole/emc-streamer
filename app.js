@@ -72,6 +72,7 @@ app.get('/yt/getembed/:idVideo', yt.getembed);
 app.get('/yt/stream/:idVideo/:format?', yt.stream);
 app.get('/yt/play/:idVideo/:format?', yt.stream);
 app.get('/yt/download/:idVideo/:format?', yt.download);
+app.get('/yt/audio/:idVideo/:format?', yt.audio);
 // DailyMotion
 app.get('/dlm/info/:idVideo', dlm.info);
 app.get('/dlm/geturl/:idVideo', dlm.geturl);
