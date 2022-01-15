@@ -69,6 +69,7 @@ body {font-family: Arial;}
     <a href="/yt/play/BTAqyRy-tFQ" target="_blank"> Play  </a>&nbsp;
     <a href="/yt/download/BTAqyRy-tFQ" target="_blank"> Download </a>&nbsp;
     <a href="/yt/audio/BTAqyRy-tFQ" target="_blank"> Only Audio </a>&nbsp;
+    <a href="/yt/serverdowload/BTAqyRy-tFQ" target="_blank"> Download on server </a>&nbsp;
     <a href="/yt/getembed/BTAqyRy-tFQ" target="_blank"> Play from YouTube</a>&nbsp;
     <a href="/yt/info/BTAqyRy-tFQ" target="_blank"> Infos </a>&nbsp;
     <!-- <a href="/yt/geturl/BTAqyRy-tFQ" target="_blank"> getUrl </a>&nbsp;
@@ -105,6 +106,8 @@ body {font-family: Arial;}
     Youtube ID Vidéo <input type="text" name="idname" value="G_sqvnMABjA">
     <input type="button" onclick="FramePlay(idname.value,'yt')" value="Play">
     <input type="button" onclick="FrameEmbed(idname.value,'yt')" value="Embed">
+    <input type="button" onclick="FrameAudio(idname.value,'yt')" value="Audio">
+    <input type="button" onclick="FrameDownload(idname.value,'yt')" value="Server Download">
   </form>
   <br>
   <form id="frm3" >
@@ -135,6 +138,28 @@ var lcf = document.getElementById("lcframe");
 
   var player = document.getElementById("myframe");
        var url = "/"+target+"/play/"+idname
+       player.src = url;
+  }
+  function FrameAudio(idname,target){
+    if (target=="yt") {
+      idname=ytUri(idname)
+    }
+    var info = document.getElementById("infoframe");
+     info.src = "/" + target + "/info/" + idname
+
+  var player = document.getElementById("myframe");
+       var url = "/"+target+"/audio/"+idname
+       player.src = url;
+  }
+  function FrameDownload(idname,target){
+    if (target=="yt") {
+      idname=ytUri(idname)
+    }
+    var info = document.getElementById("infoframe");
+     info.src = "/" + target + "/info/" + idname
+
+  var player = document.getElementById("myframe");
+       var url = "/"+target+"/serverdownload/"+idname
        player.src = url;
   }
   function FrameEmbed(idname,target){

@@ -1,4 +1,5 @@
 // Videos On YouTube
+var config = require('config');
 var vstream = require("../vstream.js");
 var fs = require("fs");
 var request = require("request");
@@ -6,6 +7,37 @@ var ytdl = require("ytdl-core");
 var url = require("url");
 const { pipe } = require("superagent");
 
+var rootFolder=config.serveIndex.rootFolder;
+console.log(rootFolder)
+
+//vidStreamer.settings(newSettings);
+/*
+ * Download on server
+ */
+exports.serverdownload = function (req, res) {
+  if (ytdl.validateID(req.params.idVideo)) {
+    try {
+    ytdl.getInfo(req.params.idVideo).then((infos) => {
+    const format = ytdl.chooseFormat(infos.formats, {quality: '18'});
+    console.log(format)  
+     mystream=  ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo)
+    //res.setHeader('Content-Type', 'application/octet-stream');
+       mystream.pipe(fs.createWriteStream(config.serveIndex.rootFolder+'/'+infos.videoDetails.title+'.mp4'));
+       res.write('<html>'+infos.videoDetails.title+' => Téléchargement ...');
+       mystream.on('end', () => {
+         res.end( ' <strong>terminé</strong></html>');
+       })
+  });
+  }
+  catch (error) {
+    console.error(error);
+    res.send("Video Not Found");
+   
+  }
+    } else {res.send("Video Not Found");}
+  // ytdl('http://www.youtube.com/watch?v=aqz-KE-bpKQ')
+  // .pipe(fs.createWriteStream('video.mp4'));
+}
 /*
  * GET Video Info
  */
@@ -41,25 +73,53 @@ catch (error) {
  * GET video url video  webm ou mp4
  */
 exports.geturl = function (req, res) {
-  console.log("test  "+ytdl.validateID(req.params.idVideo));
-  ytdl.getInfo(
-    "https://www.youtube.com/watch?v=" + req.params.idVideo,
-    function (err, infos) {
-      if (err) {
-        console.log("getUrl " + req.params.idVideo + " " + err.message);
-        res.send("Not Found", 404);
-        return;
-      }
+  if (ytdl.validateID(req.params.idVideo)) {
+    try {
+    ytdl.getInfo(req.params.idVideo).then((infos) => {
+      // if (err) {
+      //   console.log("getInfo " + err.message);
+      //   res.send("Not Found", 404);
+      //   return;
+      // }
+      //res.send(infos);
       var fmt = req.params.format == "mp4" ? req.params.format : "webm";
+      console.log(fmt)
       var format = infos.formats.filter(function (format) {
-        return format.container === fmt;
-      })[0];
-      var reponse = {
-        url: format.url,
-      };
-      res.send(req.query.callback + "(" + JSON.stringify(reponse) + ");");
-    }
-  );
+           return format.container === fmt;
+             })[0];
+      res.send(
+        format.url
+      );
+    });
+  }
+  catch (error) {
+    console.error(error);
+    res.send("Video Not Found");
+   
+  }
+    } else {res.send("Video Not Found");}
+  
+  //console.log(req.params.format)
+  // console.log("test  "+ytdl.validateID(req.params.idVideo));
+  // ytdl.getInfo( req.params.idVideo,
+  //   function (err, infos) {
+  //     if (err) {
+  //       console.log("getUrl " + req.params.idVideo + " " + err.message);
+  //       res.send("Not Found", 404);
+  //       return;
+  //     }
+  //     console.log(infos)
+  //     var fmt = req.params.format == "mp4" ? req.params.format : "webm";
+  //     console.log(fmt)
+  //     var format = infos.formats.filter(function (format) {
+  //       return format.container === fmt;
+  //     })[0];
+  //     var reponse = {
+  //       url: format.url,
+  //     };
+  //     res.send(req.query.callback + "(" + JSON.stringify(reponse) + ");");
+  //   }
+  // );
 };
 
 /*
@@ -68,21 +128,21 @@ exports.geturl = function (req, res) {
 
 exports.stream = function (req, res) {
   if (ytdl.validateID(req.params.idVideo)) {
-  try {
+    try {
+    ytdl.getInfo(req.params.idVideo).then((infos) => {
+    const format = ytdl.chooseFormat(infos.formats, {quality: 'highest'});
+    //console.log(format.url)  
+     mystream=  ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo)
     //res.setHeader('Content-Type', 'application/octet-stream');
-  ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
-    filter: (format) => format.container === "mp4",
-  })
-  .pipe(res);
-}
-catch (error) {
-  console.error("catch " + error);
-  res.send("Video Not Found");
- 
-}
+       mystream.pipe(res);
+  });
   }
-else res.end();
-  
+  catch (error) {
+    console.error(error);
+    res.send("Video Not Found");
+   
+  }
+    } else {res.send("Video Not Found");}
 };
 exports.audio = function (req, res) {
   if (ytdl.validateID(req.params.idVideo)) {
