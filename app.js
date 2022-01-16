@@ -2,9 +2,22 @@
  *  Main  Application
  */
 
-var cluster = require('cluster');
-var express = require('express');
-var bodyParser = require('body-parser');
+const cluster = require('cluster');
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const helmet = require('helmet');
+//const morgan = require('morgan');
+const {
+  startDatabase
+} = require('./mongo');
+const {
+  insertAd,
+  getAds
+} = require('./ads');
+const apiSignature = require('api-signature');
+const crypto = require("crypto");
+
 var util = require('util');
 var log4js = require('log4js');
 var errorHandler = require('errorhandler');
@@ -26,20 +39,80 @@ if (typeof logger !== undefined) {
 logger.setLevel = 'ERROR';
 logger.info('Worker ' + process.pid + ' is ready!');
 
-var app = express();
+
+
+// Set APIKEY
+const apiKeys = new Map();
+// dXNlcm5hbWU6MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MA==
+apiKeys.set('123456789', {
+  id: 1,
+  name: 'app1',
+  secret: 'secret1'
+});
+class Signer {
+  constructor(apiKey, apiSecret) {
+    this.apiKey = apiKey;
+    this.apiSecret = apiSecret;
+  }
+  signHeaders() {
+    const headers = {};
+    if (this.apiKey && this.apiKey) {
+      const date = new Date().toUTCString();
+      headers.Authorization = this.sign(date);
+      headers.date = date;
+    }
+    return headers;
+  }
+  encrypt(data) {
+    const hash = crypto.createHmac("sha256", this.apiSecret).update(data).digest();
+    //to lowercase hexits
+    return hash
+  }
+  sign(date) {
+    const signature = Buffer.from(this.encrypt(`date: ${date}`)).toString("base64");
+    console.log(date, signature);
+    return `Signature keyId="${this.apiKey}",algorithm="hmac-sha256",signature="${signature}"`;
+  }
+}
+
+// Your function to get the secret associated to the key id
+function getSecret(keyId, done) {
+  if (!apiKeys.has(keyId)) {
+    return done(new Error('Unknown api key'));
+  }
+  const clientApp = apiKeys.get(keyId);
+  done(null, clientApp.secret, {
+    id: clientApp.id,
+    name: clientApp.name
+  });
+}
+
+
+const app = express();
+// Uncomment for secure API
+
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.use(log4js.connectLogger(logger, {
   level: log4js.levels.INFO
 }));
-app.use(bodyParser());
-app.use(methodOverride());
+app.use(bodyParser.text());
+//app.use(bodyParser.json());
+app.use(cors());
+//app.use(methodOverride());
 
 
 var newSettings = {
   "rootFolder": config.videosStream.rootFolder,
   "rootPath": ""
 }
+
+
+
+
 vidStreamer.settings(newSettings);
 
 // development only
@@ -47,6 +120,23 @@ if ('development' == app.get('env')) {
   app.use(errorHandler());
 }
 //
+//app.get('/',apiSignature({ getSecret }), async (req, res) => {
+//res.send(await getAds());
+//});
+
+app.get('/unprotected', async (req, res) => {
+  const signer = new Signer('123456789', apiKeys.get('123456789').secret);
+  console.log(signer)
+  // const response = await request.post(
+  //     "http://localhost:8080/protected",{
+  //       headers: signer.signHeaders(),
+  //     }
+  //);
+  console.log("Success");
+  res.send(signer)
+  //response.pipe(res);
+});
+
 app.use('/media', express.static(config.serveIndex.rootFolder), serveIndex(config.serveIndex.rootFolder, {
   'icons': true
 }))
