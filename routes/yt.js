@@ -55,9 +55,16 @@ exports.serverdownload = function (req, res) {
   if (ytdl.validateID(req.params.idVideo)) {
     try {
       ytdl.getInfo(req.params.idVideo).then((infos) => {
+        try {
         const format = ytdl.chooseFormat(infos.formats, {
           quality: '18'
         });
+      }
+       catch (error) {
+          res.send("Video Not Found");
+          return;
+        }
+      
         //console.log(format)
 
         video = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo)
@@ -157,9 +164,15 @@ exports.stream = function (req, res) {
   if (ytdl.validateID(req.params.idVideo)) {
     try {
       ytdl.getInfo(req.params.idVideo).then((infos) => {
+        try {
         const format = ytdl.chooseFormat(infos.formats, {
           quality: 'highest'
         });
+      }
+      catch (error) {
+        res.send("Video Not Found");
+        return;
+      }
         //console.log(format.url)  
         mystream = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
           filter: format => format.container === 'webm'
@@ -180,9 +193,15 @@ exports.audio = function (req, res) {
   if (ytdl.validateID(req.params.idVideo)) {
     try {
       ytdl.getInfo(req.params.idVideo).then((infos) => {
+        try {
         const format = ytdl.chooseFormat(infos.formats, {
           quality: 'highest'
         });
+      }
+      catch (error) {
+        res.send("Video Not Found")
+        return;
+      }
         //console.log(format.url)  
         mystream = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
           filter: 'audioonly'
