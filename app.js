@@ -32,7 +32,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(log4js.connectLogger(logger, {
   level: log4js.levels.INFO
 }));
-app.use(bodyParser());
+app.use(bodyParser.text());
 app.use(methodOverride());
 
 
@@ -73,6 +73,7 @@ app.get('/yt/stream/:idVideo/:format?', yt.stream);
 app.get('/yt/play/:idVideo/:format?', yt.stream);
 app.get('/yt/download/:idVideo/:format?', yt.download);
 app.get('/yt/serverdownload/:idVideo/:format?', yt.serverdownload);
+app.get('/yt/serverdownloadmp3/:idVideo/:format?', yt.serverdownloadmp3);
 app.get('/yt/audio/:idVideo/:format?', yt.audio);
 app.get('/yt/serverdowload/:idVideo/:format?', yt.serverdownload);
 // DailyMotion

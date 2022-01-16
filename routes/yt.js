@@ -5,6 +5,7 @@ var vstream = require("../vstream.js");
 var fs = require("fs");
 var request = require("request");
 var ytdl = require("ytdl-core");
+const ffmpeg = require('fluent-ffmpeg');
 var url = require("url");
 const {
   pipe
@@ -16,6 +17,40 @@ console.log(rootFolder)
 /*
  * Download on server
  */
+
+exports.serverdownloadmp3 = function (req, res) {
+  res.write("Conversion: " + req.params.idVideo+ " ...")
+  if (ytdl.validateID(req.params.idVideo)) {
+    
+    try {
+      ytdl.getInfo(req.params.idVideo).then((infos) => {
+        let stream = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
+          quality: 'highestaudio',
+        });
+        res.write(infos.videoDetails.title)
+        let start = Date.now();
+        ffmpeg(stream)
+          .audioBitrate(128)
+          .save(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp3`)
+          
+          .on('progress', p => {
+            //readline.cursorTo(process.stdout, 0);
+           // process.stdout.write(`${p.targetSize}kb downloaded`);
+          })
+          .on('end', () => {
+            res.end(` OK- ${(Date.now() - start) / 1000}s`);
+          })
+
+      });
+    } catch (error) {
+      //console.error(error);
+      res.send("Video Not Found");
+    }
+  } else {
+    res.send("Video Not Found");
+  }
+}
+
 exports.serverdownload = function (req, res) {
   if (ytdl.validateID(req.params.idVideo)) {
     try {
