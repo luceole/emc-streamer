@@ -17,9 +17,13 @@ var rootFolder = config.serveIndex.rootFolder;
 console.log(rootFolder)
 
 
-exports.convertDownload = function (req,res) {
+exports.convertdownload = function (req,res) {
   var refUrl = "http://www.youtube.com/watch?v=" + req.params.idVideo;
-  res.write("Conversion: " + req.params.idVideo+ " ...")
+  res.setHeader('Connection', 'Transfer-Encoding');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Transfer-Encoding', 'chunked');
+
+  res.write('<html> Convertion et Téléchargement  ');
   if (ytdl.validateID(req.params.idVideo)) {
     
     try {
@@ -27,7 +31,9 @@ exports.convertDownload = function (req,res) {
         let stream = ytdl(refUrl, {
           quality: 'highestaudio',
         });
-        res.write(infos.videoDetails.title)
+        res.write('<br> '+ infos.videoDetails.title )
+        res.write('<br> Conversion audio => MP3 ...')
+      
         let start = Date.now();
         ffmpeg(stream)
           .audioBitrate(128)
@@ -37,10 +43,9 @@ exports.convertDownload = function (req,res) {
            // process.stdout.write(`${p.targetSize}kb downloaded`);
           })
           .on('end', () => {
-            console.log("mp3")
-            res.write(` OK- ${(Date.now() - start) / 1000}s`);
-            console.log("Merging Audio&Vidéo")
-            res.write("Merging Audio&Vidéo")
+            
+            res.write(`     OK - ${(Date.now() - start) / 1000}s`);
+            res.write("<br> Remix Audio et Vidéo => MP4...")
             video = ytdl(refUrl);
             var proc = ffmpeg(video)
             .addOutputOptions('-movflags +frag_keyframe+separate_moof+omit_tfhd_offset+empty_moov')
@@ -48,8 +53,8 @@ exports.convertDownload = function (req,res) {
             .addInput(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp3`)
             //.addInput(audio)
             .on('end', function() {
-              res.end('file has been converted succesfully');
-              console.log('file has been converted succesfully');
+              res.write(`     OK - ${(Date.now() - start) / 1000}s <br><a href="/medias/${infos.videoDetails.title}.mp4">  Regarder maintenant! </a>`);
+              res.end("</html>")
             })
             .on('error', function(err) {
               console.log('an error happened: ' + err.message);
@@ -80,7 +85,11 @@ exports.convertDownload = function (req,res) {
  */
 
 exports.serverdownloadmp3 = function (req, res) {
-  res.write("Conversion: " + req.params.idVideo+ " ...")
+  res.setHeader('Connection', 'Transfer-Encoding');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Transfer-Encoding', 'chunked');
+
+  res.write("<html> Conversion audio MP3")
   if (ytdl.validateID(req.params.idVideo)) {
     
     try {
@@ -88,7 +97,8 @@ exports.serverdownloadmp3 = function (req, res) {
         let stream = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
           quality: 'highestaudio',
         });
-        res.write(infos.videoDetails.title)
+        res.write('<br>'+infos.videoDetails.title)
+        res.write('<br> Conversion audio => MP3 ...')
         let start = Date.now();
         ffmpeg(stream)
           .audioBitrate(128)
@@ -98,7 +108,8 @@ exports.serverdownloadmp3 = function (req, res) {
            // process.stdout.write(`${p.targetSize}kb downloaded`);
           })
           .on('end', () => {
-            res.end(` OK- ${(Date.now() - start) / 1000}s`);  
+            res.end(` OK- ${(Date.now() - start) / 1000}s <br><a href="/medias/${infos.videoDetails.title}.mp3"> Ecouter maintenant! </a>`); 
+           
           })
 
       });

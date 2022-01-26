@@ -70,6 +70,7 @@ body {font-family: Arial;}
     <a href="/yt/download/BTAqyRy-tFQ" target="_blank"> Download </a>&nbsp;
     <a href="/yt/audio/BTAqyRy-tFQ" target="_blank"> Only Audio </a>&nbsp;
     <a href="/yt/serverdowload/BTAqyRy-tFQ" target="_blank"> Download on server </a>&nbsp;
+    <a href="/yt/serverconvert/BTAqyRy-tFQ" target="_blank"> Download&convert on server </a>&nbsp;
     <a href="/yt/serverdownloadmp3/BTAqyRy-tFQ" target="_blank"> Download MP3 on server </a>&nbsp;
     <a href="/yt/getembed/BTAqyRy-tFQ" target="_blank"> Play from YouTube</a>&nbsp;
     <a href="/yt/info/BTAqyRy-tFQ" target="_blank"> Infos </a>&nbsp;
@@ -108,6 +109,7 @@ body {font-family: Arial;}
     <input type="button" onclick="FramePlay(idname.value,'yt')" value="Play">
     <input type="button" onclick="FrameEmbed(idname.value,'yt')" value="Embed">
     <input type="button" onclick="FrameAudio(idname.value,'yt')" value="Audio">
+    <input type="button" onclick="FrameDownload1(idname.value,'yt')" value="Server Download MP3">
     <input type="button" onclick="FrameDownload(idname.value,'yt')" value="Server Download">
     <input type="button" onclick="FrameDownload2(idname.value,'yt')" value="Server Convert">
   </form>
@@ -164,6 +166,17 @@ var lcf = document.getElementById("lcframe");
        var url = "/"+target+"/serverdownload/"+idname
        player.src = url;
   }
+  function FrameDownload1(idname,target){
+    if (target=="yt") {
+      idname=ytUri(idname)
+    }
+    var info = document.getElementById("infoframe");
+     info.src = "/" + target + "/info/" + idname
+
+  var player = document.getElementById("myframe");
+       var url = "/"+target+"/serverdownloadmp3/"+idname
+       player.src = url;
+  }
   function FrameDownload2(idname,target){
     if (target=="yt") {
       idname=ytUri(idname)
@@ -175,6 +188,7 @@ var lcf = document.getElementById("lcframe");
        var url = "/"+target+"/serverconvert/"+idname
        player.src = url;
   }
+    
   function FrameEmbed(idname,target){
   var player = document.getElementById("myframe");
        var url = "/"+target+"/getembed/"+idname
