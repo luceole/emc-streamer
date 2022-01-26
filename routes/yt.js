@@ -1,4 +1,5 @@
 // Videos On YouTube
+const cp = require('child_process');
 const readline = require('readline');
 var config = require('config');
 var vstream = require("../vstream.js");
@@ -6,6 +7,7 @@ var fs = require("fs");
 var request = require("request");
 var ytdl = require("ytdl-core");
 const ffmpeg = require('fluent-ffmpeg');
+const ffmpegStatic = require('ffmpeg-static');
 var url = require("url");
 const {
   pipe
@@ -14,6 +16,65 @@ const {
 var rootFolder = config.serveIndex.rootFolder;
 console.log(rootFolder)
 
+
+exports.convertDownload = function (req,res) {
+  var refUrl = "http://www.youtube.com/watch?v=" + req.params.idVideo;
+  res.write("Conversion: " + req.params.idVideo+ " ...")
+  if (ytdl.validateID(req.params.idVideo)) {
+    
+    try {
+      ytdl.getInfo(req.params.idVideo).then((infos) => {
+        let stream = ytdl(refUrl, {
+          quality: 'highestaudio',
+        });
+        res.write(infos.videoDetails.title)
+        let start = Date.now();
+        ffmpeg(stream)
+          .audioBitrate(128)
+         .save(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp3`)
+          .on('progress', p => {
+            //readline.cursorTo(process.stdout, 0);
+           // process.stdout.write(`${p.targetSize}kb downloaded`);
+          })
+          .on('end', () => {
+            console.log("mp3")
+            res.write(` OK- ${(Date.now() - start) / 1000}s`);
+            console.log("Merging Audio&Vidéo")
+            res.write("Merging Audio&Vidéo")
+            video = ytdl(refUrl);
+            var proc = ffmpeg(video)
+            .addOutputOptions('-movflags +frag_keyframe+separate_moof+omit_tfhd_offset+empty_moov')
+            //.audioBitrate(128)
+            .addInput(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp3`)
+            //.addInput(audio)
+            .on('end', function() {
+              res.end('file has been converted succesfully');
+              console.log('file has been converted succesfully');
+            })
+            .on('error', function(err) {
+              console.log('an error happened: ' + err.message);
+            })  
+            //.pipe(res, {end:true})
+            .save(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp4`)
+
+
+
+          })
+
+      });
+    } catch (error) {
+      //console.error(error);
+      res.send("Video Not Found");
+    }
+   
+
+  } else {
+    res.send("Video Not Found");
+  }
+
+
+
+}
 /*
  * Download on server
  */
@@ -31,14 +92,13 @@ exports.serverdownloadmp3 = function (req, res) {
         let start = Date.now();
         ffmpeg(stream)
           .audioBitrate(128)
-          .save(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp3`)
-          
+         .save(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp3`)
           .on('progress', p => {
             //readline.cursorTo(process.stdout, 0);
            // process.stdout.write(`${p.targetSize}kb downloaded`);
           })
           .on('end', () => {
-            res.end(` OK- ${(Date.now() - start) / 1000}s`);
+            res.end(` OK- ${(Date.now() - start) / 1000}s`);  
           })
 
       });

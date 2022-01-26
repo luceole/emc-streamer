@@ -70,6 +70,7 @@ app.get('/yt/geturl/:idVideo/:format?', yt.geturl);
 app.get('/yt/getoembed/:idVideo', yt.getoembed);
 app.get('/yt/getembed/:idVideo', yt.getembed);
 app.get('/yt/stream/:idVideo/:format?', yt.stream);
+app.get('/yt/serverconvert/:idVideo/:format?', yt.convertDownload);
 app.get('/yt/play/:idVideo/:format?', yt.stream);
 app.get('/yt/download/:idVideo/:format?', yt.download);
 app.get('/yt/serverdownload/:idVideo/:format?', yt.serverdownload);

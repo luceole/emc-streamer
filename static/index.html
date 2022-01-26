@@ -109,6 +109,7 @@ body {font-family: Arial;}
     <input type="button" onclick="FrameEmbed(idname.value,'yt')" value="Embed">
     <input type="button" onclick="FrameAudio(idname.value,'yt')" value="Audio">
     <input type="button" onclick="FrameDownload(idname.value,'yt')" value="Server Download">
+    <input type="button" onclick="FrameDownload2(idname.value,'yt')" value="Server Convert">
   </form>
   <br>
   <form id="frm3" >
@@ -161,6 +162,17 @@ var lcf = document.getElementById("lcframe");
 
   var player = document.getElementById("myframe");
        var url = "/"+target+"/serverdownload/"+idname
+       player.src = url;
+  }
+  function FrameDownload2(idname,target){
+    if (target=="yt") {
+      idname=ytUri(idname)
+    }
+    var info = document.getElementById("infoframe");
+     info.src = "/" + target + "/info/" + idname
+
+  var player = document.getElementById("myframe");
+       var url = "/"+target+"/serverconvert/"+idname
        player.src = url;
   }
   function FrameEmbed(idname,target){
