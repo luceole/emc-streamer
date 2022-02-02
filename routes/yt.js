@@ -36,7 +36,7 @@ exports.convertdownload = function (req, res) {
           .save(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp3`)
           .on('progress', p => {
             //readline.cursorTo(process.stdout, 0);
-            // process.stdout.write(`${p.targetSize}kb downloaded`);
+            //process.stdout.write(`${p.targetSize}kb downloaded`);
           })
           .on('end', () => {
             res.write(`     OK - ${(Date.now() - start) / 1000}s`);
@@ -48,13 +48,13 @@ exports.convertdownload = function (req, res) {
               .addInput(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp3`)
               //.addInput(audio)
               .on('end', function () {
-                res.write(`     OK - ${(Date.now() - start) / 1000}s <br><a href="/medias/${infos.videoDetails.title}.mp4">  Regarder maintenant! </a>`);
-                res.end("</html>")
+               res.write(`     OK - ${(Date.now() - start) / 1000}s <br><a href="/medias/${infos.videoDetails.title}.mp4">  Regarder maintenant! </a>`);
+               res.end("</html>")
               })
               .on('error', function (err) {
                 console.log('an error happened: ' + err.message);
               })
-              //.pipe(res, {end:true})
+              //.pipe(res)
               .save(`${config.serveIndex.rootFolder}/${infos.videoDetails.title}.mp4`)
           })
       });
@@ -67,7 +67,7 @@ exports.convertdownload = function (req, res) {
   }
 }
 /*
- * Download on server
+ * Download MP3 on server
  */
 
 exports.serverdownloadmp3 = function (req, res) {
@@ -213,7 +213,7 @@ exports.stream = function (req, res) {
         }
         //console.log(format.url)  
         mystream = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
-          filter: format => format.container === 'webm'
+         // filter: format => format.container === 'webm'
         })
         //res.setHeader('Content-Type', 'application/octet-stream');
         mystream.pipe(res);
