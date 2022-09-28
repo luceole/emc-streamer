@@ -1,6 +1,6 @@
- from node:16
+ from node:18-alpine
 # Create app directory
-run apt update; apt install -y ffmpeg
+run  apk add ffmpeg
 WORKDIR /usr/src/app
 COPY package*.json ./
 
