@@ -93,8 +93,11 @@ body {font-family: Arial;}
   </p> -->
 </div>
 <div id="DEMO" class="tabcontent">
-<iframe src="" name="myframe" id="myframe" width="650" height="370" frameborder=0></iframe>
-<iframe src="" name="infoframe" id="infoframe" width="650" height="200" frameborder=0></iframe>
+<span>
+  <video  style="display: none;" controls autoplay src="" name="myplayer" id="myplayer" width="650" height="370" frameborder=0></video>
+</span>
+<iframe src="" style="display: none" name="myframe" id="myframe" width="650" height="370" frameborder=0></iframe>
+<iframe src="" name="infoframe" id="infoframe" width="650" height="400" frameborder=0></iframe>
 <p>
 <hr>
 <p>
@@ -116,7 +119,7 @@ body {font-family: Arial;}
   <br>
   <form id="frm3" >
     DailyMotion ID Vidéo <input type="text" name="idname" value="x55xe20">
-      <input type="button" onclick="FramePlay(idname.value,'dlm')" value="Play">
+    <input type="button" onclick="FramePlay(idname.value,'dlm')" value="Play(don't work)">
     <input type="button" onclick="FrameEmbed(idname.value,'dlm')" value="Embed">
   </form>
 <br>
@@ -140,8 +143,12 @@ var lcf = document.getElementById("lcframe");
     var info = document.getElementById("infoframe");
      info.src = "/" + target + "/info/" + idname
 
-  var player = document.getElementById("myframe");
+  var player = document.getElementById("myplayer");
+  var frame = document.getElementById("myframe")
+       frame.style.display = "none"
+       frame.src=""
        var url = "/"+target+"/play/"+idname
+       player.style.display = "inline-block" 
        player.src = url;
   }
   function FrameAudio(idname,target){
@@ -150,10 +157,13 @@ var lcf = document.getElementById("lcframe");
     }
     var info = document.getElementById("infoframe");
      info.src = "/" + target + "/info/" + idname
-
-  var player = document.getElementById("myframe");
+  var player = document.getElementById("myplayer");
+  player.src=""
+  player.style.display="none"
+  var frame = document.getElementById("myframe");
        var url = "/"+target+"/audio/"+idname
-       player.src = url;
+       frame.src = url;
+       frame.style.display = "inline-block"
   }
   function FrameDownload(idname,target){
     if (target=="yt") {
@@ -161,21 +171,28 @@ var lcf = document.getElementById("lcframe");
     }
     var info = document.getElementById("infoframe");
      info.src = "/" + target + "/info/" + idname
-
-  var player = document.getElementById("myframe");
+     var player = document.getElementById("myplayer");
+  player.src=""
+  player.style.display="none"
+  var frame = document.getElementById("myframe");
        var url = "/"+target+"/serverdownload/"+idname
-       player.src = url;
+       frame.src = url;
+         frame.style.display = "inline-block"
   }
   function FrameDownload1(idname,target){
     if (target=="yt") {
       idname=ytUri(idname)
     }
+    var player = document.getElementById("myplayer");
+  player.src=""
+  player.style.display="none"
     var info = document.getElementById("infoframe");
      info.src = "/" + target + "/info/" + idname
 
-  var player = document.getElementById("myframe");
+  var frame = document.getElementById("myframe");
        var url = "/"+target+"/serverdownloadmp3/"+idname
-       player.src = url;
+       frame.src = url;
+       frame.style.display = "inline-block"
   }
   function FrameDownload2(idname,target){
     if (target=="yt") {
@@ -183,16 +200,25 @@ var lcf = document.getElementById("lcframe");
     }
     var info = document.getElementById("infoframe");
      info.src = "/" + target + "/info/" + idname
-
-  var player = document.getElementById("myframe");
+     var player = document.getElementById("myplayer");
+  player.src=""
+  player.style.display="none"
+  var frame = document.getElementById("myframe");
        var url = "/"+target+"/serverconvert/"+idname
-       player.src = url;
+       frame.src = url;
+       frame.style.display = "inline-block"
   }
     
   function FrameEmbed(idname,target){
-  var player = document.getElementById("myframe");
+    var info = document.getElementById("infoframe");
+     info.src = "/" + target + "/info/" + idname
+    var player = document.getElementById("myplayer");
+  player.src=""
+  player.style.display="none"
+  var frame = document.getElementById("myframe");
        var url = "/"+target+"/getembed/"+idname
-       player.src = url;
+       frame.src = url;
+       frame.style.display = "inline-block"
   }
   function ytFunction(idname) {
   window.open("/yt/play/"+idname,"nom_de_la_fenetre","menubar=no, status=no, width=100px");
