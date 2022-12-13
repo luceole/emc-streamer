@@ -114,7 +114,10 @@ exports.serverdownload = function (req, res) {
           return;
         }
         //console.log(format)
-        video = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo)
+        video = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo,{
+          //filter: format => format.container === 'webm',
+          quality: '18'
+         })
         let starttime;
         video.pipe(fs.createWriteStream(config.serveIndex.rootFolder + '/' + infos.videoDetails.title + '.mp4'));
         res.write('<html>' + infos.videoDetails.title + ' => Téléchargement ...');
@@ -204,18 +207,22 @@ exports.stream = function (req, res) {
     try {
       ytdl.getInfo(req.params.idVideo).then((infos) => {
         try {
-          const format = ytdl.chooseFormat(infos.formats, {
-            quality: 'highest'
-          });
+           const format = ytdl.chooseFormat(infos.formats, {
+            quality: '18'
+        });
+          console.log('Format found!', format)
+         
+        
         } catch (error) {
           res.send("Video Not Found");
           return;
         }
         //console.log(format.url)  
         mystream = ytdl("http://www.youtube.com/watch?v=" + req.params.idVideo, {
-         // filter: format => format.container === 'webm'
+         //filter: format => format.container === 'audioandvideo'
+         quality: '18'
         })
-        //res.setHeader('Content-Type', 'application/octet-stream');
+        res.setHeader('Content-Type', 'application/octet-stream');
         mystream.pipe(res);
       });
     } catch (error) {
@@ -265,7 +272,7 @@ exports.download = function (req, res) {
   videoID = req.params.idVideo;
   //ytdl.getInfo(videoID).then(info) => {
   //ytdl.getInfo(req.params.idVideo).then((info) => {
-  //const format = ytdl.chooseFormat(info.formats, {quality: 'highest'});
+  //const format = ytdl.chooseFormat(info.formats, {quality: '18'});
   //console.log(format.url)  
   // RNFetchBlob
   //   .config({
